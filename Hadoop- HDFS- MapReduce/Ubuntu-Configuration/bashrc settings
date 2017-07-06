@@ -1,0 +1,64 @@
+mkdir /usr/local/hadoop
+cp /home/akin/Downloads/hadoop-2.7.3.tar.gz /home/hduser/
+tar xvzf hadoop-2.7.3.tar.gz
+mv hadoop-2.7.3 /usr/local/hadoop/
+chrown -R hduser:hadoop hadoop
+# Set Hadoop-related environment variables
+export HADOOP_HOME=/usr/local/hadoop
+# Add Hadoop bin/ directory to PATH
+export PATH= $PATH:$HADOOP_HOME/bin
+*********************************************************
+
+IGNORE ABOVE;
+
+USE BELOW
+
+vim ~/.bashrc
+********************************************************
+
+#Set Hadoop-related environment variables
+export HADOOP_PREFIX='/usr/local/hadoop'
+export HADOOP_HOME='/usr/local/hadoop'
+export HADOOP_MAPRED_HOME=${HADOOP_HOME}
+export HADOOP_COMMON_HOME=${HADOOP_HOME}
+export HADOOP_HDFS_HOME=${HADOOP_HOME}
+export YARN_HOME=${HADOOP_HOME}
+export HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop
+
+# Native Path
+export HADOOP_COMMON_LIB_NATIVE_DIR=${HADOOP_HOME}/lib/native
+export HADOOP_OPTS="-Djava.library.path=${HADOOP_COMMON_LIB_NATIVE_DIR}"
+
+# Java Path
+export JAVA_HOME='/usr/local/java/jdk1.8.0_131'
+# Add Java bin, Hadoop bin and sbin to path
+export PATH=$PATH:$JAVA_HOME/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+
+# Some convenient aliases and functions for running Hadoop-related commands
+unalias fs &> /dev/null
+alias fs="hadoop fs"
+unalias hls &> /dev/null
+alias hls="fs -ls"
+
+# If you have LZO compression enabled in your Hadoop cluster and
+# compress job outputs with LZOP (not covered in this tutorial):
+# Conveniently inspect an LZOP compressed file from the command
+# line; run via:
+#
+# $ lzohead /hdfs/path/to/lzop/compressed/file.lzo
+#
+# Requires installed 'lzop' command.
+#
+lzohead () {
+    hadoop fs -cat $1 | lzop -dc | head -1000 | less
+}
+
+***************************************************************************************
+
+
+After editing the ~/.bashrc run the following to effect the changes
+cd $HOME
+source ~/.bashrc
+
+
+
